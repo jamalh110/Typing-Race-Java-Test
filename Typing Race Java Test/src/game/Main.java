@@ -1,4 +1,5 @@
 package game;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -18,9 +19,14 @@ public class Main {
 	private static Scanner key = new Scanner(System.in);
 
 	public static void main(String[] args) {
+
+		/*
+		 * Object a = new Object(); Object b = a; b = null; System.out.println(a+" "+b);
+		 * if(1==1) return;
+		 */
 		try {
 			apache();
-			
+
 			// sendSocket();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -28,32 +34,43 @@ public class Main {
 		}
 
 	}
-	static void apache() throws Exception{
-		String url = "http://localhost:8080/?message=yough";
 
+	static void apache() throws Exception {
+		String url = "http://localhost:8081/?type=match&sessionID=46528be6-7154-11e7-8cf7-a6006ad3dba0&username=1";
+		String queryURL = "http://localhost:8081/?type=query";
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpGet request = new HttpGet(url);
 
 		// add request header
 		request.addHeader("User-Agent", CoreProtocolPNames.USER_AGENT);
-		while(true) {
-		HttpResponse response = client.execute(request);
+		boolean done = false;
+		while (true) {
+			if(done) {
+				 request = new HttpGet(queryURL);
 
-		System.out.println("Response Code : "
-		                + response.getStatusLine().getStatusCode());
+				// add request header
+				request.addHeader("User-Agent", CoreProtocolPNames.USER_AGENT);
+			}
+			HttpResponse response = client.execute(request);
+				
+			
+			done = true;
 
-		BufferedReader rd = new BufferedReader(
-			new InputStreamReader(response.getEntity().getContent()));
+			System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 
-		StringBuffer result = new StringBuffer();
-		String line = "";
-		while ((line = rd.readLine()) != null) {
-			result.append(line);
-		}
-		System.out.print(result);
-		Thread.sleep(40000);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+			StringBuffer result = new StringBuffer();
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+				//System.out.println(result);
+			}
+			System.out.println(result);
+			Thread.sleep(5000);
 		}
 	}
+
 	private static void sendGet() throws Exception {
 
 		String url = "http://localhost:8080/?message=yava";
@@ -76,14 +93,13 @@ public class Main {
 		in.close();
 		con.disconnect();
 		Thread.sleep(20000);
-		
-		
+
 		System.out.println(response.toString());
 		con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("GET");
-		 in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		
-		 response = new StringBuffer();
+		in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+		response = new StringBuffer();
 
 		while ((inputLine = in.readLine()) != null) {
 			response.append(inputLine);
@@ -111,17 +127,17 @@ public class Main {
 
 			String inputLine;
 			StringBuffer response = new StringBuffer();
-			
+
 			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
-				
+
 				Thread.sleep(1000);
 				print(response.toString());
-				
+
 			}
 			in.close();
 			s.close();
-			
+
 			System.out.println(response.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
