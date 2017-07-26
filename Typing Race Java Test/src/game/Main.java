@@ -36,21 +36,39 @@ public class Main {
 	}
 
 	static void apache() throws Exception {
-		String url = "http://localhost:8081/?type=match&sessionID=46528be6-7154-11e7-8cf7-a6006ad3dba0&username=1";
-		String queryURL = "http://localhost:8081/?type=query";
+		Scanner input = new Scanner(System.in);
+		
+		String url = "";
+		//http://localhost:8081/?type=match&sessionID=46528be6-7154-11e7-8cf7-a6006ad3dba0&username=1"
+		//String queryURL = "http://localhost:8081/?type=query";
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet(url);
-
-		// add request header
-		request.addHeader("User-Agent", CoreProtocolPNames.USER_AGENT);
-		boolean done = false;
+		
+		
 		while (true) {
-			if(done) {
-				 request = new HttpGet(queryURL);
-
-				// add request header
-				request.addHeader("User-Agent", CoreProtocolPNames.USER_AGENT);
+			System.out.println("port:");
+			int port = input.nextInt();
+			url = "http://localhost:"+port+"/?";
+			boolean first = true;
+			while(true) {
+				System.out.println("param=val, no to end:");
+				String string = input.nextLine();
+				if(string.equals("no")) {
+					break;
+				}
+				if(first) {
+				url = url+string;
+				first = false;
+				
+				}
+				else {
+					
+				}
 			}
+			
+			
+			HttpGet request = new HttpGet(url);
+			request.addHeader("User-Agent", CoreProtocolPNames.USER_AGENT);
+			
 			HttpResponse response = client.execute(request);
 				
 			
